@@ -6,7 +6,9 @@
 <li>Upon selecting an image, the image selected should be tracked.</li>
 <li>A new set of images shall appear, none of which should be duplicates of the immediatly preceding set.  NOTE:  Duplicates may appear during a user session, but not duplicates may appear in contiguous sets. </li>
 <li>Once the user has made 25 selections, the survey portion shall stop,and the marketing data shall appear.</li>
+</ul>
 <h2>Marketing Data</h2>
 <ul>
 <li>The survey results shall display, and the application should disable the ability to select an image.</li>
 <li>The survey results shall contain a list of all of the products and the number of times the subject selected each one.</li>
+</ul>
