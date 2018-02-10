@@ -5,12 +5,16 @@ var allProducts = [];
 
 var currProducts = [];
 var newProducts = [];
-
+var maxArrayLimit = 3;
+var numSelections = 0;
+var maxSelections = 25;
+// var allDone = false;
 
 //make my constructor function
 function Product(name, filepath) {
   this.name = name;
   this.filepath = filepath;
+  this.numSelected = 0;
   allProducts.push(this);
 }
 
@@ -33,18 +37,18 @@ new Product('water-can','img/water-can.jpeg');
 new Product('wine-glass','img/wine-glass.jpeg');
 
 
-//listener
+// declare listener
 var imgEl0 = document.getElementById('product0');
 var imgEl1 = document.getElementById('product1');
 var imgEl2 = document.getElementById('product2');
 
-imgEl0.addEventListener('click', randomProducts);
-imgEl1.addEventListener('click', randomProducts);
-imgEl2.addEventListener('click', randomProducts);
+imgEl0.addEventListener('click', SelectedZero);
+imgEl1.addEventListener('click', SelectedOne);
+imgEl2.addEventListener('click', SelectedTwo);
 
 
 //Initialize Arrays with dummy Values
-var maxArrayLimit = 3;
+
 for (var i=0; i<maxArrayLimit; i++); {
   currProducts.push('dummy');
 }
@@ -52,7 +56,34 @@ for (i=0; i<maxArrayLimit; i++); {
   newProducts.push('dummy');
 }
 
+//Post initial images for selection.
 randomProducts();
+
+//Handle Selections
+function SelectedZero() {
+  currProducts[0].numSelected++;
+  if (numSelections >= maxSelections) {
+    outputTotals();
+  } else{
+    randomProducts();
+  }
+}
+function SelectedOne() {
+  currProducts[1].numSelected++;
+  if (numSelections >= maxSelections) {
+    outputTotals();
+  } else{
+    randomProducts();
+  }
+}
+function SelectedTwo() {
+  currProducts[2].numSelected++;
+  if (numSelections >= maxSelections) {
+    outputTotals();
+  } else{
+    randomProducts();
+  }
+}
 
 //randomly display three of the pictures (but with no duplicates)
 function randomProducts() {
@@ -64,22 +95,21 @@ function randomProducts() {
         found = true;
       }
     }
-    console.log(allProducts[randomProduct]);
     newProducts[i] = allProducts[randomProduct];
   }
 
   currProducts = newProducts;
 
   for (var j=0; j<maxArrayLimit;j++) {
-    console.log(j);
     var imgEl = document.getElementById('product'+j);
-    console.log(imgEl);
-    console.log(currProducts[j]);
     imgEl.src = currProducts[j].filepath;
   }
+  //Console.log(numSelections);
+  numSelections++;
 }
 
 //This function checks for duplicate occurances of the same product.
+//We need to check both arrays to avoid contiguous occurances.
 function checkDupe(randomProduct) {
   var dupFound = false;
   for (var i=0;i<maxArrayLimit;i++) {
@@ -93,4 +123,28 @@ function checkDupe(randomProduct) {
     }
   }
   return dupFound;
+}
+
+function outputTotals() {
+  //Turn listeners off
+  document.getElementById('product0').removeEventListener('click', SelectedZero);
+  document.getElementById('product1').removeEventListener('click', SelectedOne);
+  document.getElementById('product2').removeEventListener('click', SelectedTwo);
+
+  //Output Totals
+  var subheader = document.getElementById('subheader');
+  subheader.textContent = 'Thank you for participating.';
+
+  //Output Totals
+  var resultsList = document.getElementById('resultsList');
+  var liEl;
+
+  for (var i=0; i<allProducts.length;i++) {
+    console.log(allProducts[i].name);
+    console.log(allProducts[i].numSelected);
+    liEl = document.createElement('li');
+    liEl.textContent = allProducts[i].numSelected + ' votes for the ' + allProducts[i].name;
+    resultsList.appendChild(liEl);
+  }
+
 }

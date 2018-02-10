@@ -1,3 +1,5 @@
 .productpic {
     width: 200px;
+    border: 2px;
+    border-color: aqua;
 }
