@@ -154,5 +154,4 @@ function outputTotals() {
     liEl.textContent = allProducts[i].numSelected + ' votes for the ' + allProducts[i].name;
     resultsList.appendChild(liEl);
   }
-
 }
