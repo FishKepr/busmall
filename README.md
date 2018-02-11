@@ -1,6 +1,6 @@
 # busmall-start
 
-<h1>Busmall Prototype</h1>
+<h1>Busmall Prototype (Busmall-Start)</h1>
 <ul>
 <li>Application displays a series of products to a test subject, in sets of three.</li>
 <li>User will select a product and the application records the selection.</li>
