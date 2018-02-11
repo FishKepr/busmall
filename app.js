@@ -101,8 +101,10 @@ function randomProducts() {
     newProducts[i] = allProducts[randomProduct];
   }
 
+  //Replace current products array with the one.
   currProducts = newProducts;
 
+  //Replace the images on the page
   for (var j=0; j<maxArrayLimit;j++) {
     var imgEl = document.getElementById('product'+j);
     imgEl.src = currProducts[j].filepath;
@@ -143,7 +145,7 @@ function outputTotals() {
   //Output Totals
   var listheader = document.getElementById('listheader');
   listheader.textContent = 'Survey Results';
-  
+
   var resultsList = document.getElementById('resultsList');
   var liEl;
 
@@ -154,5 +156,4 @@ function outputTotals() {
     liEl.textContent = allProducts[i].numSelected + ' votes for the ' + allProducts[i].name;
     resultsList.appendChild(liEl);
   }
-
 }
