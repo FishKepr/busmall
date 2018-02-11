@@ -1,16 +1,18 @@
 'use strict';
 
-//array to store the objects
+//Array to store the objects
 var allProducts = [];
 
+//Arrays for current and next selections
 var currProducts = [];
 var newProducts = [];
+
+//Misc working area fields
 var maxArrayLimit = 3;
 var numSelections = 0;
 var maxSelections = 25;
-// var allDone = false;
 
-//make my constructor function
+//Constructor for products
 function Product(name, filepath) {
   this.name = name;
   this.filepath = filepath;
@@ -18,6 +20,10 @@ function Product(name, filepath) {
   allProducts.push(this);
 }
 
+
+//******* MAINLINE ********
+
+//Build product objects
 new Product('bag','img/bag.jpeg');
 new Product('banana','img/banana.jpeg');
 new Product('bathroom','img/bathroom.jpeg');
@@ -41,14 +47,12 @@ new Product('wine-glass','img/wine-glass.jpeg');
 var imgEl0 = document.getElementById('product0');
 var imgEl1 = document.getElementById('product1');
 var imgEl2 = document.getElementById('product2');
-
 imgEl0.addEventListener('click', SelectedZero);
 imgEl1.addEventListener('click', SelectedOne);
 imgEl2.addEventListener('click', SelectedTwo);
 
 
-//Initialize Arrays with dummy Values
-
+//Initialize working arrays with dummy Values
 for (var i=0; i<maxArrayLimit; i++); {
   currProducts.push('dummy');
 }
@@ -59,33 +63,32 @@ for (i=0; i<maxArrayLimit; i++); {
 //Post initial images for selection.
 randomProducts();
 
-//Handle Selections
+//******** FUNCTIONS START HERE ********
+
+//Handle/Determine Different Selections
 function SelectedZero() {
-  currProducts[0].numSelected++;
-  if (numSelections >= maxSelections) {
-    outputTotals();
-  } else{
-    randomProducts();
-  }
+  userSelection(0);
 }
 function SelectedOne() {
-  currProducts[1].numSelected++;
-  if (numSelections >= maxSelections) {
-    outputTotals();
-  } else{
-    randomProducts();
-  }
+  userSelection(1);
 }
 function SelectedTwo() {
-  currProducts[2].numSelected++;
-  if (numSelections >= maxSelections) {
-    outputTotals();
-  } else{
+  userSelection(2);
+}
+
+//Handle Selection
+function userSelection(selection) {
+  console.log('User selected ' + currProducts[selection].name);
+  currProducts[selection].numSelected++;
+  //If we are done, output the totals, otherwise post a new set
+  if (numSelections < maxSelections) {
     randomProducts();
+  } else{
+    outputTotals();
   }
 }
 
-//randomly display three of the pictures (but with no duplicates)
+//Randomly display a selection of pictures (but with no duplicates)
 function randomProducts() {
   for (var i=0; i<maxArrayLimit;i++) {
     var found = false;
@@ -103,8 +106,9 @@ function randomProducts() {
   for (var j=0; j<maxArrayLimit;j++) {
     var imgEl = document.getElementById('product'+j);
     imgEl.src = currProducts[j].filepath;
+    imgEl.alt = currProducts[j].name;
   }
-  //Console.log(numSelections);
+  console.log(numSelections);
   numSelections++;
 }
 
@@ -125,17 +129,21 @@ function checkDupe(randomProduct) {
   return dupFound;
 }
 
+//This function outputs the final results of the survey.
 function outputTotals() {
   //Turn listeners off
   document.getElementById('product0').removeEventListener('click', SelectedZero);
   document.getElementById('product1').removeEventListener('click', SelectedOne);
   document.getElementById('product2').removeEventListener('click', SelectedTwo);
 
-  //Output Totals
+  //Change sub-header
   var subheader = document.getElementById('subheader');
   subheader.textContent = 'Thank you for participating.';
 
   //Output Totals
+  var listheader = document.getElementById('listheader');
+  listheader.textContent = 'Survey Results';
+  
   var resultsList = document.getElementById('resultsList');
   var liEl;
 
