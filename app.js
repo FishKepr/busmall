@@ -17,9 +17,9 @@ function Product(name, filepath) {
   this.name = name;
   this.filepath = filepath;
   this.numSelected = 0;
+  this.numViews = 0;
   allProducts.push(this);
 }
-
 
 //******* MAINLINE ********
 
@@ -42,7 +42,6 @@ new Product('usb','img/usb.gif');
 new Product('water-can','img/water-can.jpeg');
 new Product('wine-glass','img/wine-glass.jpeg');
 
-
 // declare listener
 var imgEl0 = document.getElementById('product0');
 var imgEl1 = document.getElementById('product1');
@@ -51,12 +50,9 @@ imgEl0.addEventListener('click', SelectedZero);
 imgEl1.addEventListener('click', SelectedOne);
 imgEl2.addEventListener('click', SelectedTwo);
 
-
 //Initialize working arrays with dummy Values
 for (var i=0; i<maxArrayLimit; i++); {
   currProducts.push('dummy');
-}
-for (i=0; i<maxArrayLimit; i++); {
   newProducts.push('dummy');
 }
 
@@ -99,6 +95,7 @@ function randomProducts() {
       }
     }
     newProducts[i] = allProducts[randomProduct];
+    allProducts[randomProduct].numViews++;
   }
 
   //Replace current products array with the one.
@@ -153,7 +150,7 @@ function outputTotals() {
     console.log(allProducts[i].name);
     console.log(allProducts[i].numSelected);
     liEl = document.createElement('li');
-    liEl.textContent = allProducts[i].numSelected + ' votes for the ' + allProducts[i].name;
+    liEl.textContent = allProducts[i].numSelected + ' votes for the ' + allProducts[i].name + ' out of ' + allProducts[i].numViews + ' views.';
     resultsList.appendChild(liEl);
   }
 }
