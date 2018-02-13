@@ -15,7 +15,7 @@ var maxSelections = 25;
 //Constructor for products
 function Product(name, filepath) {
   this.name = name;
-  this.filepath = filepath;
+  this.filepath = 'img/'+filepath;
   this.numSelected = 0;
   this.numViews = 0;
   allProducts.push(this);
@@ -24,23 +24,23 @@ function Product(name, filepath) {
 //******* MAINLINE ********
 
 //Build product objects
-new Product('bag','img/bag.jpeg');
-new Product('banana','img/banana.jpeg');
-new Product('bathroom','img/bathroom.jpeg');
-new Product('boots','img/boots.jpeg');
-new Product('breakfast','img/breakfast.jpeg');
-new Product('bubblegum','img/bubblegum.jpeg');
-new Product('chair','img/chair.jpeg');
-new Product('cthulhu','img/cthulhu.jpeg');
-new Product('dog-duck','img/dog-duck.jpeg');
-new Product('dragon','img/dragon.jpeg');
-new Product('pen','img/pen.jpeg');
-new Product('pet-sweep','img/pet-sweep.jpeg');
-new Product('tauntaun','img/tauntaun.jpeg');
-new Product('unicorn','img/unicorn.jpeg');
-new Product('usb','img/usb.gif');
-new Product('water-can','img/water-can.jpeg');
-new Product('wine-glass','img/wine-glass.jpeg');
+new Product('bag','bag.jpeg');
+new Product('banana','banana.jpeg');
+new Product('bathroom','bathroom.jpeg');
+new Product('boots','boots.jpeg');
+new Product('breakfast','breakfast.jpeg');
+new Product('bubblegum','bubblegum.jpeg');
+new Product('chair','chair.jpeg');
+new Product('cthulhu','cthulhu.jpeg');
+new Product('dog-duck','dog-duck.jpeg');
+new Product('dragon','dragon.jpeg');
+new Product('pen','pen.jpeg');
+new Product('pet-sweep','pet-sweep.jpeg');
+new Product('tauntaun','tauntaun.jpeg');
+new Product('unicorn','unicorn.jpeg');
+new Product('usb','usb.gif');
+new Product('water-can','water-can.jpeg');
+new Product('wine-glass','wine-glass.jpeg');
 
 // declare listener
 var imgEl0 = document.getElementById('product0');
