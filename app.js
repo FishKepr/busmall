@@ -143,21 +143,26 @@ function outputTotals() {
   var listheader = document.getElementById('listheader');
   listheader.textContent = 'Survey Results';
 
+  var resultsArea = document.getElementById('resultsarea');
+  resultsArea.style.borderStyle = 'solid';
+  resultsArea.style.borderColor = 'green';
+  // resultsArea.style.borderWidth = '5px';
+
   var resultsList = document.getElementById('resultsList');
   var liEl;
 
   var chartLabels = [];
   var chartNumVotes = [];
-  var chartVoteColors = [];
+  // var chartVoteColors = [];
   var chartNumViews = [];
-  var chartVoteColors = [];
+  // var chartVoteColors = [];
 
   for (var i=0; i<allProducts.length;i++) {
     console.log(allProducts[i].name);
     chartLabels.push(allProducts[i].name);
     console.log(allProducts[i].numSelected);
     chartNumVotes.push(allProducts[i].numSelected);
-    chartVoteColors.push(getRandomColor());
+    // chartVoteColors.push(getRandomColor());
 
     chartNumViews.push(allProducts[i].numViews);
 
@@ -208,11 +213,11 @@ function outputTotals() {
 }
 
 //This generates a random color for the chart bars.
-function getRandomColor() {
-  var letters = '0123456789ABCDEF';
-  var color = '#';
-  for (var i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)];
-  }
-  return color;
-}
+// function getRandomColor() {
+//   var letters = '0123456789ABCDEF';
+//   var color = '#';
+//   for (var i = 0; i < 6; i++) {
+//     color += letters[Math.floor(Math.random() * 16)];
+//   }
+//   return color;
+// }

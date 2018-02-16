@@ -13,20 +13,24 @@ h2 {
 
 #productarea {
     width: 80%;
-    height: 420px;
-    border: 5px;
+    height: 500px;
+    border-width: 5px;
     border-style: solid;
     border-color: teal;
     padding: 1%;
-    position: relative;
-
+    vertical-align: bottom;
+    display: table-cell;
 }
 .productpic {
     width: 32%;
     border: 1px;
     border-style: solid;
     border-color: black;
-    vertical-align: bottom;
     display: inline-block;
-    bottom: 0px;
+}
+
+#resultsarea {
+    margin-top: 5px;
+    border-width: 5px;
+    padding: 1%
 }
