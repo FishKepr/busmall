@@ -146,11 +146,73 @@ function outputTotals() {
   var resultsList = document.getElementById('resultsList');
   var liEl;
 
+  var chartLabels = [];
+  var chartNumVotes = [];
+  var chartVoteColors = [];
+  var chartNumViews = [];
+  var chartVoteColors = [];
+
   for (var i=0; i<allProducts.length;i++) {
     console.log(allProducts[i].name);
+    chartLabels.push(allProducts[i].name);
     console.log(allProducts[i].numSelected);
+    chartNumVotes.push(allProducts[i].numSelected);
+    chartVoteColors.push(getRandomColor());
+
+    chartNumViews.push(allProducts[i].numViews);
+
     liEl = document.createElement('li');
     liEl.textContent = allProducts[i].numSelected + ' votes for the ' + allProducts[i].name + ' out of ' + allProducts[i].numViews + ' views.';
     resultsList.appendChild(liEl);
   }
+
+
+  //Output a chart of the results.
+
+  var ctx = document.getElementById('chartarea').getContext('2d');
+
+  var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: chartLabels,
+      datasets: [{
+        label: '# of Votes',
+        data: chartNumVotes,
+        backgroundColor: 'red'
+      },
+      {
+        label: '# of Views',
+        data: chartNumViews,
+        backgroundColor: 'lightblue'
+      }]
+    },
+    options: {
+      scales: {
+        xAxes: [{
+          ticks: {
+            beginAtZero: true
+          },
+          // stacked: true
+
+        }],
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          },
+          // stacked: true
+
+        }]
+      }
+    }
+  });
+}
+
+//This generates a random color for the chart bars.
+function getRandomColor() {
+  var letters = '0123456789ABCDEF';
+  var color = '#';
+  for (var i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
 }
