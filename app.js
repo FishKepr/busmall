@@ -146,33 +146,31 @@ function outputTotals() {
   var resultsArea = document.getElementById('resultsarea');
   resultsArea.style.borderStyle = 'solid';
   resultsArea.style.borderColor = 'green';
-  // resultsArea.style.borderWidth = '5px';
 
   var resultsList = document.getElementById('resultsList');
   var liEl;
 
   var chartLabels = [];
   var chartNumVotes = [];
-  // var chartVoteColors = [];
   var chartNumViews = [];
-  // var chartVoteColors = [];
 
+  //Spin Through the products to generate the results
   for (var i=0; i<allProducts.length;i++) {
     console.log(allProducts[i].name);
-    chartLabels.push(allProducts[i].name);
     console.log(allProducts[i].numSelected);
-    chartNumVotes.push(allProducts[i].numSelected);
-    // chartVoteColors.push(getRandomColor());
 
+    //Build Chart Arrays
+    chartLabels.push(allProducts[i].name);
+    chartNumVotes.push(allProducts[i].numSelected);
     chartNumViews.push(allProducts[i].numViews);
 
+    //Append each list line
     liEl = document.createElement('li');
     liEl.textContent = allProducts[i].numSelected + ' votes for the ' + allProducts[i].name + ' out of ' + allProducts[i].numViews + ' views.';
     resultsList.appendChild(liEl);
   }
 
-
-  //Output a chart of the results.
+  //Output the chart of the results.
 
   var ctx = document.getElementById('chartarea').getContext('2d');
 
@@ -197,27 +195,13 @@ function outputTotals() {
           ticks: {
             beginAtZero: true
           },
-          // stacked: true
-
         }],
         yAxes: [{
           ticks: {
             beginAtZero: true
           },
-          // stacked: true
-
         }]
       }
     }
   });
 }
-
-//This generates a random color for the chart bars.
-// function getRandomColor() {
-//   var letters = '0123456789ABCDEF';
-//   var color = '#';
-//   for (var i = 0; i < 6; i++) {
-//     color += letters[Math.floor(Math.random() * 16)];
-//   }
-//   return color;
-// }
