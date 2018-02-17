@@ -4,8 +4,8 @@
 var allProducts = [];
 
 //Arrays for current and next selections
-var currProducts = [];
-var newProducts = [];
+var currProducts = [0,0,0];
+var newProducts = [0,0,0];
 
 //Misc working area fields
 var maxArrayLimit = 3;
@@ -13,53 +13,84 @@ var numSelections = 0;
 var maxSelections = 25;
 
 //Constructor for products
-function Product(name, filepath) {
+function Product(name, filepath, numSelected, numViews) {
   this.name = name;
-  this.filepath = 'img/'+filepath;
-  this.numSelected = 0;
-  this.numViews = 0;
+  this.filepath = filepath;
+  this.numSelected = numSelected;
+  this.numViews = numViews;
   allProducts.push(this);
 }
 
 //******* MAINLINE ********
 
-//Build product objects
-new Product('bag','bag.jpeg');
-new Product('banana','banana.jpeg');
-new Product('bathroom','bathroom.jpeg');
-new Product('boots','boots.jpeg');
-new Product('breakfast','breakfast.jpeg');
-new Product('bubblegum','bubblegum.jpeg');
-new Product('chair','chair.jpeg');
-new Product('cthulhu','cthulhu.jpeg');
-new Product('dog-duck','dog-duck.jpeg');
-new Product('dragon','dragon.jpeg');
-new Product('pen','pen.jpeg');
-new Product('pet-sweep','pet-sweep.jpeg');
-new Product('tauntaun','tauntaun.jpeg');
-new Product('unicorn','unicorn.jpeg');
-new Product('usb','usb.gif');
-new Product('water-can','water-can.jpeg');
-new Product('wine-glass','wine-glass.jpeg');
+//Restore from checkpoint if one exists, otherwise load new product array
+(function getLocalStorage() {
+  if (localStorage.products) {
+    //Reload Product Array from checkpoint
+    console.log('Restoring product array from local storage');
+    var strProducts = localStorage.getItem('products');
+    var products = JSON.parse(strProducts);
+    for (var prod of products) {
+      new Product(prod.name, prod.filepath, prod.numSelected, prod.numViews);
+    }
+    //Reload number of selections
+    var strNumSelections = localStorage.getItem('numselections');
+    numSelections = JSON.parse(strNumSelections);
+    console.log('Restored numSelections: '+numSelections);
+    //Reload current product array
+    var strCurrProducts = localStorage.getItem('currproducts');
+    currProducts = JSON.parse(strCurrProducts);
+    console.log('Restored current product array');
+    displayCurrProducts();
+  } else {
+    //This is the first iteration, create the product array and post first images
+    instantiateProducts();
+    randomProducts();
+  }
+})();
 
-// declare listener
-var imgEl0 = document.getElementById('product0');
-var imgEl1 = document.getElementById('product1');
-var imgEl2 = document.getElementById('product2');
-imgEl0.addEventListener('click', SelectedZero);
-imgEl1.addEventListener('click', SelectedOne);
-imgEl2.addEventListener('click', SelectedTwo);
-
-//Initialize working arrays with dummy Values
-for (var i=0; i<maxArrayLimit; i++); {
-  currProducts.push('dummy');
-  newProducts.push('dummy');
+//If we are loading or reloading the page before results are done, declare listeners, otherwise output the totals.
+if (numSelections < maxSelections) {
+  var imgEl0 = document.getElementById('product0');
+  var imgEl1 = document.getElementById('product1');
+  var imgEl2 = document.getElementById('product2');
+  imgEl0.addEventListener('click', SelectedZero);
+  imgEl1.addEventListener('click', SelectedOne);
+  imgEl2.addEventListener('click', SelectedTwo);
+} else {
+  //User reloaded the page after completing survey, output totals.
+  outputTotals();
 }
 
-//Post initial images for selection.
-randomProducts();
+//Create listener to clear local storage on command.
+var clearLS = document.getElementById('clearStorage');
+clearLS.addEventListener('click', function() {
+  console.log('Clearing Local Storage');
+  localStorage.clear();
+});
 
 //******** FUNCTIONS START HERE ********
+
+//Build product objects
+function instantiateProducts() {
+  new Product('bag','bag.jpeg',0,0);
+  new Product('banana','banana.jpeg',0,0);
+  new Product('bathroom','bathroom.jpeg',0,0);
+  new Product('boots','boots.jpeg',0,0);
+  new Product('breakfast','breakfast.jpeg',0,0);
+  new Product('bubblegum','bubblegum.jpeg',0,0);
+  new Product('chair','chair.jpeg',0,0);
+  new Product('cthulhu','cthulhu.jpeg',0,0);
+  new Product('dog-duck','dog-duck.jpeg',0,0);
+  new Product('dragon','dragon.jpeg',0,0);
+  new Product('pen','pen.jpeg',0,0);
+  new Product('pet-sweep','pet-sweep.jpeg',0,0);
+  new Product('tauntaun','tauntaun.jpeg',0,0);
+  new Product('unicorn','unicorn.jpeg',0,0);
+  new Product('usb','usb.gif',0,0);
+  new Product('water-can','water-can.jpeg',0,0);
+  new Product('wine-glass','wine-glass.jpeg',0,0);
+}
 
 //Handle/Determine Different Selections
 function SelectedZero() {
@@ -76,6 +107,13 @@ function SelectedTwo() {
 function userSelection(selection) {
   console.log('User selected ' + currProducts[selection].name);
   currProducts[selection].numSelected++;
+
+  //Take Checkpoint:  Save results to local storage
+  var strProducts = JSON.stringify(allProducts);
+  localStorage.setItem('products', strProducts);
+  var strNumSelections = JSON.stringify(numSelections);
+  localStorage.setItem('numselections', strNumSelections);
+
   //If we are done, output the totals, otherwise post a new set
   if (numSelections < maxSelections) {
     randomProducts();
@@ -86,7 +124,7 @@ function userSelection(selection) {
 
 //Randomly display a selection of pictures (but with no duplicates)
 function randomProducts() {
-  for (var i=0; i<maxArrayLimit;i++) {
+  for (var i=0; i<maxArrayLimit; i++) {
     var found = false;
     while (found === false) {
       var randomProduct = Math.floor(Math.random() * allProducts.length);
@@ -98,17 +136,28 @@ function randomProducts() {
     allProducts[randomProduct].numViews++;
   }
 
-  //Replace current products array with the one.
+  //Replace current products array with the one and clear new product array.
   currProducts = newProducts;
+  newProducts = [0,0,0];
 
   //Replace the images on the page
-  for (var j=0; j<maxArrayLimit;j++) {
-    var imgEl = document.getElementById('product'+j);
-    imgEl.src = currProducts[j].filepath;
-    imgEl.alt = currProducts[j].name;
-  }
+  displayCurrProducts();
+
+  //Take Checkpoint of current products displayed.
+  var strCurrProducts = JSON.stringify(currProducts);
+  localStorage.setItem('currproducts', strCurrProducts);
+
   console.log(numSelections);
   numSelections++;
+}
+
+//This function displays the current array of products
+function displayCurrProducts(){
+  for (var j=0; j<maxArrayLimit; j++) {
+    var imgEl = document.getElementById('product'+j);
+    imgEl.src = 'img/'+currProducts[j].filepath;
+    imgEl.alt = currProducts[j].name;
+  }
 }
 
 //This function checks for duplicate occurances of the same product.
@@ -117,11 +166,13 @@ function checkDupe(randomProduct) {
   var dupFound = false;
   for (var i=0;i<maxArrayLimit;i++) {
     if (allProducts[randomProduct]===currProducts[i]) {
+      console.log('Found Dupe in Current Products');
       dupFound = true;
     }
   }
   for (i=0;i<maxArrayLimit;i++) {
     if (allProducts[randomProduct]===newProducts[i]) {
+      console.log('Found Dupe in New Products');
       dupFound = true;
     }
   }
@@ -135,6 +186,13 @@ function outputTotals() {
   document.getElementById('product1').removeEventListener('click', SelectedOne);
   document.getElementById('product2').removeEventListener('click', SelectedTwo);
 
+  //Change border of products to red, thick
+  var productPic = document.getElementsByClassName('productpic');
+  for (var i=0; i<productPic.length; i++) {
+    productPic[i].style.borderColor = 'red';
+    productPic[i].style.borderWidth = 'thick';
+  }
+
   //Change sub-header
   var subheader = document.getElementById('subheader');
   subheader.textContent = 'Thank you for participating.';
@@ -143,10 +201,6 @@ function outputTotals() {
   var listheader = document.getElementById('listheader');
   listheader.textContent = 'Survey Results';
 
-  var resultsArea = document.getElementById('resultsarea');
-  resultsArea.style.borderStyle = 'solid';
-  resultsArea.style.borderColor = 'green';
-
   var resultsList = document.getElementById('resultsList');
   var liEl;
 
@@ -154,10 +208,11 @@ function outputTotals() {
   var chartNumVotes = [];
   var chartNumViews = [];
 
-  //Spin Through the products to generate the results
-  for (var i=0; i<allProducts.length;i++) {
+  //Spin through the products to generate the results
+  for (i=0; i<allProducts.length; i++) {
     console.log(allProducts[i].name);
-    console.log(allProducts[i].numSelected);
+    console.log('Selected: '+allProducts[i].numSelected);
+    console.log('Views: '+allProducts[i].numViews);
 
     //Build Chart Arrays
     chartLabels.push(allProducts[i].name);
@@ -170,21 +225,21 @@ function outputTotals() {
     resultsList.appendChild(liEl);
   }
 
-  //Output the chart of the results.
+  //Output a chart of the results.
 
   var ctx = document.getElementById('chartarea').getContext('2d');
 
-  var myChart = new Chart(ctx, {
+  new Chart(ctx, {
     type: 'bar',
     data: {
       labels: chartLabels,
       datasets: [{
-        label: '# of Votes',
+        label: 'Number of Votes',
         data: chartNumVotes,
-        backgroundColor: 'red'
+        backgroundColor: 'purple'
       },
       {
-        label: '# of Views',
+        label: 'Number of Views',
         data: chartNumViews,
         backgroundColor: 'lightblue'
       }]
