@@ -27,6 +27,7 @@ function Product(name, filepath, numSelected, numViews) {
 (function getLocalStorage() {
   if (localStorage.products) {
     //Reload Product Array
+    console.log('Restoring product array from local storage');
     var strProducts = localStorage.getItem('products');
     var products = JSON.parse(strProducts);
     for (var prod of products) {
@@ -35,7 +36,7 @@ function Product(name, filepath, numSelected, numViews) {
     //Reload number of selections
     var strNumSelections = localStorage.getItem('numselections');
     numSelections = JSON.parse(strNumSelections);
-    console.log('numSelections: '+numSelections);
+    console.log('Restored numSelections: '+numSelections);
     //Reload current product array
     var strCurrProducts = localStorage.getItem('currproducts');
     currProducts = JSON.parse(strCurrProducts);
@@ -209,7 +210,8 @@ function outputTotals() {
   //Spin through the products to generate the results
   for (i=0; i<allProducts.length; i++) {
     console.log(allProducts[i].name);
-    console.log(allProducts[i].numSelected);
+    console.log('Selected: '+allProducts[i].numSelected);
+    console.log('Views: '+allProducts[i].numViews);
 
     //Build Chart Arrays
     chartLabels.push(allProducts[i].name);
