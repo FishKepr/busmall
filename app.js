@@ -35,9 +35,7 @@ for (var i=0; i<maxArrayLimit; i++); {
     //Reload Product Array
     var strProducts = localStorage.getItem('products');
     var products = JSON.parse(strProducts);
-    console.log('products: '+products);
     for (var prod of products) {
-      console.log('prod: '+prod);
       var newProd = new Product(prod.name, prod.filepath, prod.numSelected, prod.numViews);
     }
     //Reload number of selections
@@ -47,7 +45,6 @@ for (var i=0; i<maxArrayLimit; i++); {
     //Reload current product array
     var strCurrProducts = localStorage.getItem('currproducts');
     currProducts = JSON.parse(strCurrProducts);
-    console.log('currProducts: '+currProducts);
     displayCurrProducts();
   } else {
     //This is the first iteration, create the product array and post first images
@@ -56,8 +53,8 @@ for (var i=0; i<maxArrayLimit; i++); {
   }
 })();
 
+//If we are loading or reloading the page before results are done, declare listeners, otherwise output the totals.
 if (numSelections < maxSelections) {
-  // declare listener
   var imgEl0 = document.getElementById('product0');
   var imgEl1 = document.getElementById('product1');
   var imgEl2 = document.getElementById('product2');
@@ -65,14 +62,14 @@ if (numSelections < maxSelections) {
   imgEl1.addEventListener('click', SelectedOne);
   imgEl2.addEventListener('click', SelectedTwo);
 } else {
-  //If we are reloading the page after results are done, output results
+  //User reloaded the page after completing survey, output totals.
   outputTotals();
 }
 
 //Create listener to clear local storage on command.
 var clearLS = document.getElementById('clearStorage');
 clearLS.addEventListener('click', function() {
-  console.log('click it!');
+  console.log('Clearing Local Storage');
   localStorage.clear();
 });
 
