@@ -143,14 +143,65 @@ function outputTotals() {
   var listheader = document.getElementById('listheader');
   listheader.textContent = 'Survey Results';
 
+  var resultsArea = document.getElementById('resultsarea');
+  resultsArea.style.borderStyle = 'solid';
+  resultsArea.style.borderColor = 'green';
+
   var resultsList = document.getElementById('resultsList');
   var liEl;
 
+  var chartLabels = [];
+  var chartNumVotes = [];
+  var chartNumViews = [];
+
+  //Spin Through the products to generate the results
   for (var i=0; i<allProducts.length;i++) {
     console.log(allProducts[i].name);
     console.log(allProducts[i].numSelected);
+
+    //Build Chart Arrays
+    chartLabels.push(allProducts[i].name);
+    chartNumVotes.push(allProducts[i].numSelected);
+    chartNumViews.push(allProducts[i].numViews);
+
+    //Append each list line
     liEl = document.createElement('li');
     liEl.textContent = allProducts[i].numSelected + ' votes for the ' + allProducts[i].name + ' out of ' + allProducts[i].numViews + ' views.';
     resultsList.appendChild(liEl);
   }
+
+  //Output the chart of the results.
+
+  var ctx = document.getElementById('chartarea').getContext('2d');
+
+  var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: chartLabels,
+      datasets: [{
+        label: '# of Votes',
+        data: chartNumVotes,
+        backgroundColor: 'red'
+      },
+      {
+        label: '# of Views',
+        data: chartNumViews,
+        backgroundColor: 'lightblue'
+      }]
+    },
+    options: {
+      scales: {
+        xAxes: [{
+          ticks: {
+            beginAtZero: true
+          },
+        }],
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          },
+        }]
+      }
+    }
+  });
 }
