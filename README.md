@@ -8,8 +8,8 @@
 <li>Once the subject makes 25 selections, the survey stops and the the application displays the results.</li>
 <br>
 
+<li>02/16/2018:  Added local storage for results of survey.</li>
 <li>02/15/2018:  Added chart to illustrate results after completion of survey.</li>
-
 <li>02/13/2018:  Added and Adjusted HTML/CSS.</li>
 
 </ul>

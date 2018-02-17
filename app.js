@@ -13,34 +13,34 @@ var numSelections = 0;
 var maxSelections = 25;
 
 //Constructor for products
-function Product(name, filepath) {
+function Product(name, filepath, numSelected, numViews) {
   this.name = name;
-  this.filepath = 'img/'+filepath;
-  this.numSelected = 0;
-  this.numViews = 0;
+  this.filepath = filepath;
+  this.numSelected = numSelected;
+  this.numViews = numViews;
   allProducts.push(this);
 }
 
 //******* MAINLINE ********
 
-//Build product objects
-new Product('bag','bag.jpeg');
-new Product('banana','banana.jpeg');
-new Product('bathroom','bathroom.jpeg');
-new Product('boots','boots.jpeg');
-new Product('breakfast','breakfast.jpeg');
-new Product('bubblegum','bubblegum.jpeg');
-new Product('chair','chair.jpeg');
-new Product('cthulhu','cthulhu.jpeg');
-new Product('dog-duck','dog-duck.jpeg');
-new Product('dragon','dragon.jpeg');
-new Product('pen','pen.jpeg');
-new Product('pet-sweep','pet-sweep.jpeg');
-new Product('tauntaun','tauntaun.jpeg');
-new Product('unicorn','unicorn.jpeg');
-new Product('usb','usb.gif');
-new Product('water-can','water-can.jpeg');
-new Product('wine-glass','wine-glass.jpeg');
+//Restore from checkpoint if one exists, otherwise load new product array
+(function getLocalStorage() {
+  if (localStorage.products) {
+    var strProducts = localStorage.getItem('products');
+    var products = JSON.parse(strProducts);
+    console.log('products: '+products);
+    for (var prod of products) {
+      console.log('prod: '+prod);
+      var newProd = new Product(prod.name, prod.filepath, prod.numSelected, prod.numViews);
+    }
+    var strNumSelections = localStorage.getItem('numselections');
+    numSelections = JSON.parse(strNumSelections);
+    console.log('numSelections: '+numSelections);
+  } else {
+    instantiateProducts();
+  }
+})();
+
 
 // declare listener
 var imgEl0 = document.getElementById('product0');
@@ -59,7 +59,35 @@ for (var i=0; i<maxArrayLimit; i++); {
 //Post initial images for selection.
 randomProducts();
 
+//Create listener to clear local storage on command.
+var clearLS = document.getElementById('clearStorage');
+clearLS.addEventListener('click', function() {
+  console.log('click it!');
+  localStorage.clear();
+});
+
 //******** FUNCTIONS START HERE ********
+
+//Build product objects
+function instantiateProducts() {
+  new Product('bag','bag.jpeg',0,0);
+  new Product('banana','banana.jpeg',0,0);
+  new Product('bathroom','bathroom.jpeg',0,0);
+  new Product('boots','boots.jpeg',0,0);
+  new Product('breakfast','breakfast.jpeg',0,0);
+  new Product('bubblegum','bubblegum.jpeg',0,0);
+  new Product('chair','chair.jpeg',0,0);
+  new Product('cthulhu','cthulhu.jpeg',0,0);
+  new Product('dog-duck','dog-duck.jpeg',0,0);
+  new Product('dragon','dragon.jpeg',0,0);
+  new Product('pen','pen.jpeg',0,0);
+  new Product('pet-sweep','pet-sweep.jpeg',0,0);
+  new Product('tauntaun','tauntaun.jpeg',0,0);
+  new Product('unicorn','unicorn.jpeg',0,0);
+  new Product('usb','usb.gif',0,0);
+  new Product('water-can','water-can.jpeg',0,0);
+  new Product('wine-glass','wine-glass.jpeg',0,0);
+}
 
 //Handle/Determine Different Selections
 function SelectedZero() {
@@ -76,6 +104,13 @@ function SelectedTwo() {
 function userSelection(selection) {
   console.log('User selected ' + currProducts[selection].name);
   currProducts[selection].numSelected++;
+
+  //Take Checkpoint:  Save results to local storage
+  var strProducts = JSON.stringify(allProducts);
+  localStorage.setItem('products', strProducts);
+  var strNumSelections = JSON.stringify(numSelections);
+  localStorage.setItem('numselections', strNumSelections);
+
   //If we are done, output the totals, otherwise post a new set
   if (numSelections < maxSelections) {
     randomProducts();
@@ -104,7 +139,7 @@ function randomProducts() {
   //Replace the images on the page
   for (var j=0; j<maxArrayLimit;j++) {
     var imgEl = document.getElementById('product'+j);
-    imgEl.src = currProducts[j].filepath;
+    imgEl.src = 'img/'+currProducts[j].filepath;
     imgEl.alt = currProducts[j].name;
   }
   console.log(numSelections);
