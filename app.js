@@ -4,8 +4,8 @@
 var allProducts = [];
 
 //Arrays for current and next selections
-var currProducts = [];
-var newProducts = [];
+var currProducts = [0,0,0];
+var newProducts = [0,0,0];
 
 //Misc working area fields
 var maxArrayLimit = 3;
@@ -24,10 +24,10 @@ function Product(name, filepath, numSelected, numViews) {
 //******* MAINLINE ********
 
 //Initialize working arrays with dummy Values
-for (var i=0; i<maxArrayLimit; i++); {
-  currProducts.push(0);
-  newProducts.push(0);
-}
+// for (var i=0; i<maxArrayLimit; i++); {
+//   currProducts.push(0);
+//   newProducts.push(0);
+// }
 
 //Restore from checkpoint if one exists, otherwise load new product array
 (function getLocalStorage() {
