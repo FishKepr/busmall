@@ -23,9 +23,16 @@ function Product(name, filepath, numSelected, numViews) {
 
 //******* MAINLINE ********
 
+//Initialize working arrays with dummy Values
+for (var i=0; i<maxArrayLimit; i++); {
+  currProducts.push(0);
+  newProducts.push(0);
+}
+
 //Restore from checkpoint if one exists, otherwise load new product array
 (function getLocalStorage() {
   if (localStorage.products) {
+    //Reload Product Array
     var strProducts = localStorage.getItem('products');
     var products = JSON.parse(strProducts);
     console.log('products: '+products);
@@ -33,31 +40,34 @@ function Product(name, filepath, numSelected, numViews) {
       console.log('prod: '+prod);
       var newProd = new Product(prod.name, prod.filepath, prod.numSelected, prod.numViews);
     }
+    //Reload number of selections
     var strNumSelections = localStorage.getItem('numselections');
     numSelections = JSON.parse(strNumSelections);
     console.log('numSelections: '+numSelections);
+    //Reload current product array
+    var strCurrProducts = localStorage.getItem('currproducts');
+    currProducts = JSON.parse(strCurrProducts);
+    console.log('currProducts: '+currProducts);
+    displayCurrProducts();
   } else {
+    //This is the first iteration, create the product array and post first images
     instantiateProducts();
+    randomProducts();
   }
 })();
 
-
-// declare listener
-var imgEl0 = document.getElementById('product0');
-var imgEl1 = document.getElementById('product1');
-var imgEl2 = document.getElementById('product2');
-imgEl0.addEventListener('click', SelectedZero);
-imgEl1.addEventListener('click', SelectedOne);
-imgEl2.addEventListener('click', SelectedTwo);
-
-//Initialize working arrays with dummy Values
-for (var i=0; i<maxArrayLimit; i++); {
-  currProducts.push('dummy');
-  newProducts.push('dummy');
+if (numSelections < maxSelections) {
+  // declare listener
+  var imgEl0 = document.getElementById('product0');
+  var imgEl1 = document.getElementById('product1');
+  var imgEl2 = document.getElementById('product2');
+  imgEl0.addEventListener('click', SelectedZero);
+  imgEl1.addEventListener('click', SelectedOne);
+  imgEl2.addEventListener('click', SelectedTwo);
+} else {
+  //If we are reloading the page after results are done, output results
+  outputTotals();
 }
-
-//Post initial images for selection.
-randomProducts();
 
 //Create listener to clear local storage on command.
 var clearLS = document.getElementById('clearStorage');
@@ -137,13 +147,23 @@ function randomProducts() {
   currProducts = newProducts;
 
   //Replace the images on the page
+  displayCurrProducts();
+
+  //Take Checkpoint of current products displayed.
+  var strCurrProducts = JSON.stringify(currProducts);
+  localStorage.setItem('currproducts', strCurrProducts);
+
+  console.log(numSelections);
+  numSelections++;
+}
+
+//This function displays the current array of products
+function displayCurrProducts(){
   for (var j=0; j<maxArrayLimit;j++) {
     var imgEl = document.getElementById('product'+j);
     imgEl.src = 'img/'+currProducts[j].filepath;
     imgEl.alt = currProducts[j].name;
   }
-  console.log(numSelections);
-  numSelections++;
 }
 
 //This function checks for duplicate occurances of the same product.
