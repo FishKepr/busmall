@@ -26,12 +26,12 @@ function Product(name, filepath, numSelected, numViews) {
 //Restore from checkpoint if one exists, otherwise load new product array
 (function getLocalStorage() {
   if (localStorage.products) {
-    //Reload Product Array
+    //Reload Product Array from checkpoint
     console.log('Restoring product array from local storage');
     var strProducts = localStorage.getItem('products');
     var products = JSON.parse(strProducts);
     for (var prod of products) {
-      var newProd = new Product(prod.name, prod.filepath, prod.numSelected, prod.numViews);
+      new Product(prod.name, prod.filepath, prod.numSelected, prod.numViews);
     }
     //Reload number of selections
     var strNumSelections = localStorage.getItem('numselections');
@@ -40,6 +40,7 @@ function Product(name, filepath, numSelected, numViews) {
     //Reload current product array
     var strCurrProducts = localStorage.getItem('currproducts');
     currProducts = JSON.parse(strCurrProducts);
+    console.log('Restored current product array');
     displayCurrProducts();
   } else {
     //This is the first iteration, create the product array and post first images
@@ -228,17 +229,17 @@ function outputTotals() {
 
   var ctx = document.getElementById('chartarea').getContext('2d');
 
-  var myChart = new Chart(ctx, {
+  new Chart(ctx, {
     type: 'bar',
     data: {
       labels: chartLabels,
       datasets: [{
-        label: '# of Votes',
+        label: 'Number of Votes',
         data: chartNumVotes,
         backgroundColor: 'purple'
       },
       {
-        label: '# of Views',
+        label: 'Number of Views',
         data: chartNumViews,
         backgroundColor: 'lightblue'
       }]
