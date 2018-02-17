@@ -23,12 +23,6 @@ function Product(name, filepath, numSelected, numViews) {
 
 //******* MAINLINE ********
 
-//Initialize working arrays with dummy Values
-// for (var i=0; i<maxArrayLimit; i++); {
-//   currProducts.push(0);
-//   newProducts.push(0);
-// }
-
 //Restore from checkpoint if one exists, otherwise load new product array
 (function getLocalStorage() {
   if (localStorage.products) {
@@ -128,7 +122,7 @@ function userSelection(selection) {
 
 //Randomly display a selection of pictures (but with no duplicates)
 function randomProducts() {
-  for (var i=0; i<maxArrayLimit;i++) {
+  for (var i=0; i<maxArrayLimit; i++) {
     var found = false;
     while (found === false) {
       var randomProduct = Math.floor(Math.random() * allProducts.length);
@@ -140,8 +134,9 @@ function randomProducts() {
     allProducts[randomProduct].numViews++;
   }
 
-  //Replace current products array with the one.
+  //Replace current products array with the one and clear new product array.
   currProducts = newProducts;
+  newProducts = [0,0,0];
 
   //Replace the images on the page
   displayCurrProducts();
@@ -156,7 +151,7 @@ function randomProducts() {
 
 //This function displays the current array of products
 function displayCurrProducts(){
-  for (var j=0; j<maxArrayLimit;j++) {
+  for (var j=0; j<maxArrayLimit; j++) {
     var imgEl = document.getElementById('product'+j);
     imgEl.src = 'img/'+currProducts[j].filepath;
     imgEl.alt = currProducts[j].name;
@@ -169,11 +164,13 @@ function checkDupe(randomProduct) {
   var dupFound = false;
   for (var i=0;i<maxArrayLimit;i++) {
     if (allProducts[randomProduct]===currProducts[i]) {
+      console.log('Found Dupe in Current Products');
       dupFound = true;
     }
   }
   for (i=0;i<maxArrayLimit;i++) {
     if (allProducts[randomProduct]===newProducts[i]) {
+      console.log('Found Dupe in New Products');
       dupFound = true;
     }
   }
@@ -187,6 +184,13 @@ function outputTotals() {
   document.getElementById('product1').removeEventListener('click', SelectedOne);
   document.getElementById('product2').removeEventListener('click', SelectedTwo);
 
+  //Change border of products to red, thick
+  var productPic = document.getElementsByClassName('productpic');
+  for (var i=0; i<productPic.length; i++) {
+    productPic[i].style.borderColor = 'red';
+    productPic[i].style.borderWidth = 'thick';
+  }
+
   //Change sub-header
   var subheader = document.getElementById('subheader');
   subheader.textContent = 'Thank you for participating.';
@@ -195,10 +199,6 @@ function outputTotals() {
   var listheader = document.getElementById('listheader');
   listheader.textContent = 'Survey Results';
 
-  var resultsArea = document.getElementById('resultsarea');
-  resultsArea.style.borderStyle = 'solid';
-  resultsArea.style.borderColor = 'green';
-
   var resultsList = document.getElementById('resultsList');
   var liEl;
 
@@ -206,8 +206,8 @@ function outputTotals() {
   var chartNumVotes = [];
   var chartNumViews = [];
 
-  //Spin Through the products to generate the results
-  for (var i=0; i<allProducts.length;i++) {
+  //Spin through the products to generate the results
+  for (i=0; i<allProducts.length; i++) {
     console.log(allProducts[i].name);
     console.log(allProducts[i].numSelected);
 
@@ -222,7 +222,7 @@ function outputTotals() {
     resultsList.appendChild(liEl);
   }
 
-  //Output the chart of the results.
+  //Output a chart of the results.
 
   var ctx = document.getElementById('chartarea').getContext('2d');
 
@@ -233,7 +233,7 @@ function outputTotals() {
       datasets: [{
         label: '# of Votes',
         data: chartNumVotes,
-        backgroundColor: 'red'
+        backgroundColor: 'purple'
       },
       {
         label: '# of Views',
